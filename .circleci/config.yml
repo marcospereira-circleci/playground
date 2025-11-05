@@ -16,16 +16,26 @@ commands:
           key: gradle-{{ checksum "build.gradle.kts" }}
 
 jobs:
-  build-regular-checkout:
+  build:
+    parameters:
+      checkout-method:
+        type: string
+        default: full
     docker:
       - image: cimg/openjdk:21.0
     steps:
-      - checkout
+      - checkout:
+          method: << parameters.checkout-method >>
       - restore-gradle-cache
       - run: ./gradlew build
       - save-gradle-cache
 
 workflows:
-  basic:
+  full-checkout:
     jobs:
-      - build-regular-checkout
+      - build
+
+  blobless-checkout:
+    jobs:
+      - build:
+          checkout-method: blobless
