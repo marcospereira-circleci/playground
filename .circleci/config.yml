@@ -5,7 +5,7 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - gradle-{{ checksum "build.gradle.kts" }}
+            - gradle-{{ checksum "build.gradle.kts" }}-{{ checksum "settings.gradle.kts" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
             - gradle-
 
   save-gradle-cache:
@@ -13,7 +13,7 @@ commands:
       - save_cache:
           paths:
             - ~/.gradle
-          key: gradle-{{ checksum "build.gradle.kts" }}
+          key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum "settings.gradle.kts" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
 
 jobs:
   build:
