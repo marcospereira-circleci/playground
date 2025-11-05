@@ -1,13 +1,31 @@
 version: 2.1
 
-jobs:
-  build:
-    docker:
-      - image: cimg/base:2022.05
+commands:
+  restore-gradle-cache:
     steps:
-      - run: echo "CircleCI Job"
+      - restore_cache:
+          keys:
+            - gradle-{{ checksum "build.gradle.kts" }}
+            - gradle-
+
+  save-gradle-cache:
+    steps:
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: gradle-{{ checksum "build.gradle.kts" }}
+
+jobs:
+  build-regular-checkout:
+    docker:
+      - image: cimg/openjdk:21.0
+    steps:
+      - checkout
+      - restore-gradle-cache
+      - run: ./gradlew build
+      - save-gradle-cache
 
 workflows:
   basic:
     jobs:
-      - build
+      - build-regular-checkout
