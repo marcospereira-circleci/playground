@@ -64,6 +64,13 @@ jobs:
       - save-gradle-cache
 
 workflows:
+  build-and-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+
   full-checkout:
     jobs:
       - build
