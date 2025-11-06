@@ -27,7 +27,7 @@ jobs:
       - checkout:
           method: << parameters.checkout-method >>
       - restore-gradle-cache
-      - run: ./gradlew build
+      - run: ./gradlew build -x test
       - save-gradle-cache
 
   test:
