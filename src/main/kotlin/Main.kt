@@ -3,7 +3,8 @@ package com.circleci
 import java.io.File
 import java.io.FileNotFoundException
 
-fun rerun(): Unit {
+@Throws(FileNotFoundException::class)
+fun stepRerun(): Unit {
     val file = File(System.getProperty("user.home"),  "pass.txt")
     if (file.exists()) {
         println("Aha, all good! File ${file.absolutePath} already exists.")
@@ -13,10 +14,21 @@ fun rerun(): Unit {
     }
 }
 
+@Throws(IllegalStateException::class)
+fun workflowRerun(): Unit {
+    val buildNumber = System.getenv("CIRCLE_BUILD_NUM").toInt()
+    if (buildNumber % 3 == 0) {
+        println("All good. The build number ($buildNumber) is a multiple of 3")
+    } else {
+        throw IllegalStateException("The build number (${buildNumber}) is not a multiple of 3")
+    }
+}
+
 fun main(args: Array<String>) {
     val method = args.firstOrNull()
     when (method) {
-        "rerun" -> rerun()
+        "stepRerun" -> stepRerun()
+        "workflowRerun" -> workflowRerun()
         else -> println("Method not found. But that is okay!")
     }
 }
