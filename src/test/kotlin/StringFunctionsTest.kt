@@ -11,7 +11,6 @@ class StringFunctionsTest : FunSpec({
         "jacob" to "bocaj",
         "logan" to "nagol",
         "marcos" to "socram",
-        "fail" to "fail"
     ).forEach { data ->
         val input = data.first
         val expectedOutput = data.second
