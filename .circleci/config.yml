@@ -43,32 +43,6 @@ jobs:
           path: build/test-results
       - save-gradle-cache
 
-  test-parallel:
-    docker:
-      - image: cimg/openjdk:21.0
-    parallelism: 2
-    steps:
-      - checkout
-      - restore-gradle-cache
-      - run:
-          name: Run tests in parallel (split by name)
-          command: |
-            # Get all test files and split by name
-            TESTFILES=$(circleci tests glob "**/src/test/**/*Test.java" | circleci tests split --split-by=name)
-
-            # Convert file paths to test class names
-            CLASSNAMES=$(echo "$TESTFILES" | sed 's|src/test/java/||g' | sed 's|\.java||g' | sed 's|/|.|g')
-
-            # Build Gradle test arguments
-            GRADLE_ARGS=$(echo "$CLASSNAMES" | sed 's/^/--tests /' | tr '\n' ' ')
-
-            # Run the tests
-            ./gradlew test $GRADLE_ARGS
-      - store_test_results:
-          path: build/test-results
-      - save-gradle-cache
-
-
   step-rerun:
     docker:
       - image: cimg/openjdk:21.0
@@ -96,9 +70,6 @@ workflows:
     jobs:
       - build
       - test:
-          requires:
-            - build
-      - test-parallel:
           requires:
             - build
 
