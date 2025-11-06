@@ -18,4 +18,19 @@ class StringFunctionsTest : FunSpec({
             StringFunctions.reverse(input) shouldBeEqual expectedOutput
         }
     }
+
+    listOf(
+        "akil" to "Akil",
+        "atul" to "Atul",
+        "chris" to "Chris",
+        "jacob" to "Jacob",
+        "logan" to "Logan",
+        "marcos" to "Marcos"
+    ).forEach { data ->
+        val input = data.first
+        val expectedOutput = data.second
+        test("the capitalized version of $input should be $expectedOutput") {
+            StringFunctions.capitalize(input) shouldBeEqual expectedOutput
+        }
+    }
 })
