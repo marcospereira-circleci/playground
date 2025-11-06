@@ -10,7 +10,8 @@ class StringFunctionsTest : FunSpec({
         "chris" to "sirhc",
         "jacob" to "bocaj",
         "logan" to "nagol",
-        "marcos" to "socram"
+        "marcos" to "socram",
+        "fail" to "fail"
     ).forEach { data ->
         val input = data.first
         val expectedOutput = data.second
