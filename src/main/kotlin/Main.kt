@@ -29,6 +29,6 @@ fun main(args: Array<String>) {
     when (method) {
         "stepRerun" -> stepRerun()
         "workflowRerun" -> workflowRerun()
-        else -> println("Method not found. But that is okay!")
+        else -> throw IllegalArgumentException("Method '${method}' not found.")
     }
 }

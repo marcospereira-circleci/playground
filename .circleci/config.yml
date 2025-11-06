@@ -76,7 +76,7 @@ jobs:
       - checkout
       - restore-gradle-cache
       - run:
-          command: ./gradlew run --args="rerun"
+          command: ./gradlew run --args="stepRerun"
           max_auto_reruns: 3
           auto_rerun_delay: 15s
       - save-gradle-cache
