@@ -38,7 +38,7 @@ jobs:
       - restore-gradle-cache
       - run:
           command: ./gradlew run --args="rerun"
-          max_auto_retries: 3
+          max_auto_reruns: 3
       - save-gradle-cache
 
 workflows:
