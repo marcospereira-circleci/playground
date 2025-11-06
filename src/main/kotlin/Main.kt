@@ -1,16 +1,22 @@
 package com.circleci
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-fun main() {
-    val name = "Kotlin"
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    println("Hello, " + name + "!")
+import java.io.File
+import java.io.FileNotFoundException
 
-    for (i in 1..5) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        println("i = $i")
+fun rerun(): Unit {
+    val file = File(System.getProperty("user.home"),  "pass.txt")
+    if (file.exists()) {
+        println("Aha, all good! File ${file.absolutePath} already exists.")
+    } else {
+        file.writer().use { it.write(1) }
+        throw FileNotFoundException("File ${file.absolutePath} was not generated yet")
+    }
+}
+
+fun main(args: Array<String>) {
+    val method = args.firstOrNull()
+    when (method) {
+        "rerun" -> rerun()
+        else -> println("Method not found. But that is okay!")
     }
 }

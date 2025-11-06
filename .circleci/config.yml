@@ -30,6 +30,17 @@ jobs:
       - run: ./gradlew build
       - save-gradle-cache
 
+  step-retry:
+    docker:
+      - image: cimg/openjdk:21.0
+    steps:
+      - checkout
+      - restore-gradle-cache
+      - run:
+          command: ./gradlew run --args="rerun"
+          max_auto_retries: 3
+      - save-gradle-cache
+
 workflows:
   full-checkout:
     jobs:
@@ -39,3 +50,7 @@ workflows:
     jobs:
       - build:
           checkout-method: blobless
+
+  with-step-retry:
+    jobs:
+      - step-retry
