@@ -39,6 +39,7 @@ jobs:
       - run:
           command: ./gradlew run --args="rerun"
           max_auto_reruns: 3
+          auto_rerun_delay: 15s
       - save-gradle-cache
 
 workflows:
