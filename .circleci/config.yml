@@ -29,6 +29,8 @@ jobs:
       - restore-gradle-cache
       - run: ./gradlew build -x test
       - save-gradle-cache
+    retention:
+      caches: 1d
 
   test:
     docker:
