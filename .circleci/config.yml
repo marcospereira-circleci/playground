@@ -1,6 +1,33 @@
 version: 2.1
 
+executors:
+  docker-executor:
+    docker:
+      - image: cimg/openjdk:21.0
+
+  machine-executor:
+    machine: true
+
+.executors-matrix: &executors-matrix
+  matrix:
+    parameters:
+      executor: [ "docker-executor", "machine-executor" ]
+
 commands:
+  install-java:
+    parameters:
+      executor:
+        type: string
+    steps:
+      - when:
+          condition:
+            equal: [ "machine-executor", << parameters.executor >> ]
+          steps:
+            - run: |
+                sudo apt-get update
+                sudo apt-get install openjdk-21-jdk
+                java -version
+
   restore-gradle-cache:
     steps:
       - restore_cache:
@@ -21,22 +48,37 @@ jobs:
       checkout-method:
         type: string
         default: full
-    docker:
-      - image: cimg/openjdk:21.0
+      executor:
+        type: string
+        default: docker-executor
+    executor: << parameters.executor >>
     steps:
       - checkout:
           method: << parameters.checkout-method >>
+      - install-java:
+          executor: << parameters.executor >>
       - restore-gradle-cache
       - run: ./gradlew build -x test
       - save-gradle-cache
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
     retention:
       caches: 1d
 
   test:
-    docker:
-      - image: cimg/openjdk:21.0
+    parameters:
+      executor:
+        type: string
+        default: docker-executor
+    executor: << parameters.executor >>
     steps:
       - checkout
+      - install-java:
+          executor: << parameters.executor >>
+      - attach_workspace:
+          at: .
       - restore-gradle-cache
       - run: ./gradlew test --rerun
       - store_test_results:
@@ -44,8 +86,7 @@ jobs:
       - save-gradle-cache
 
   step-rerun:
-    docker:
-      - image: cimg/openjdk:21.0
+    executor: docker-executor
     steps:
       - checkout
       - restore-gradle-cache
@@ -56,8 +97,7 @@ jobs:
       - save-gradle-cache
 
   workflow-rerun:
-    docker:
-      - image: cimg/openjdk:21.0
+    executor: docker-executor
     steps:
       - checkout
       - restore-gradle-cache
@@ -68,8 +108,10 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      - build
+      - build:
+          <<: *executors-matrix
       - test:
+          <<: *executors-matrix
           requires:
             - build
 
