@@ -30,6 +30,17 @@ jobs:
       - run: ./gradlew build
       - save-gradle-cache
 
+  test:
+    docker:
+      - image: cimg/openjdk:21.0
+    steps:
+      - checkout
+      - restore-gradle-cache
+      - run: ./gradlew test --rerun
+      - store_test_results:
+          path: build/test-results
+      - save-gradle-cache
+
   step-rerun:
     docker:
       - image: cimg/openjdk:21.0

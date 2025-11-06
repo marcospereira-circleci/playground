@@ -4,10 +4,10 @@ import java.io.File
 import java.io.FileNotFoundException
 
 @Throws(FileNotFoundException::class)
-fun stepRerun(): Unit {
+fun stepRerun() {
     val file = File(System.getProperty("user.home"),  "pass.txt")
     if (file.exists()) {
-        println("Aha, all good! File ${file.absolutePath} already exists.")
+        println("All good. File ${file.absolutePath} already exists.")
     } else {
         file.writer().use { it.write(1) }
         throw FileNotFoundException("File ${file.absolutePath} was not generated yet")
@@ -15,7 +15,7 @@ fun stepRerun(): Unit {
 }
 
 @Throws(IllegalStateException::class)
-fun workflowRerun(): Unit {
+fun workflowRerun() {
     val buildNumber = System.getenv("CIRCLE_BUILD_NUM").toInt()
     if (buildNumber % 3 == 0) {
         println("All good. The build number ($buildNumber) is a multiple of 3")
