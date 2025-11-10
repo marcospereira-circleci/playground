@@ -50,7 +50,6 @@ jobs:
         default: full
       executor:
         type: string
-        default: docker-executor
     executor: << parameters.executor >>
     steps:
       - checkout:
@@ -71,7 +70,6 @@ jobs:
     parameters:
       executor:
         type: string
-        default: docker-executor
     executor: << parameters.executor >>
     steps:
       - checkout
@@ -106,23 +104,30 @@ jobs:
       - save-gradle-cache
 
 workflows:
-  build-and-test:
+  build-and-test-machine:
     jobs:
       - build:
-          <<: *executors-matrix
+          executor: machine-executor
       - test:
-          <<: *executors-matrix
+          executor: machine-executor
+          requires:
+            - build
+    jobs:
+      - test:
+          executor: docker-executor
           requires:
             - build
 
   full-checkout:
     jobs:
-      - build
+      - build:
+          executor: machine-executor
 
   blobless-checkout:
     jobs:
       - build:
           checkout-method: blobless
+          executor: machine-executor
 
   with-step-rerun:
     jobs:
