@@ -103,6 +103,16 @@ jobs:
           command: ./gradlew run --args="workflowRerun"
       - save-gradle-cache
 
+  rerun-to-failure:
+    executor: docker-executor
+    steps:
+      - checkout
+      - restore-gradle-cache
+      - run:
+          command: ./gradlew run --args="justFail"
+          max_auto_reruns: 5
+      - save-gradle-cache
+
 workflows:
   build-and-test-machine:
     jobs:
@@ -112,7 +122,11 @@ workflows:
           executor: machine-executor
           requires:
             - build
+
+  build-and-test-docker:
     jobs:
+      - build:
+          executor: docker-executor
       - test:
           executor: docker-executor
           requires:
@@ -137,3 +151,8 @@ workflows:
     max_auto_reruns: 5
     jobs:
       - workflow-rerun
+
+  expected-to-fail:
+    max_auto_reruns: 5
+    jobs:
+      - rerun-to-failure
