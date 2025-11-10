@@ -43,17 +43,24 @@ commands:
           key: gradle-{{ checksum "build.gradle.kts" }}-{{ checksum "settings.gradle.kts" }}-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
 
 jobs:
-  build:
+
+  just-checkout:
     parameters:
       checkout-method:
         type: string
         default: full
+    executor: machine-executor
+    steps:
+      - checkout:
+          method: << parameters.checkout-method >>
+
+  build:
+    parameters:
       executor:
         type: string
     executor: << parameters.executor >>
     steps:
-      - checkout:
-          method: << parameters.checkout-method >>
+      - checkout
       - install-java:
           executor: << parameters.executor >>
       - restore-gradle-cache
@@ -134,14 +141,12 @@ workflows:
 
   full-checkout:
     jobs:
-      - build:
-          executor: machine-executor
+      - just-checkout
 
   blobless-checkout:
     jobs:
-      - build:
+      - just-checkout:
           checkout-method: blobless
-          executor: machine-executor
 
   with-step-rerun:
     jobs:
