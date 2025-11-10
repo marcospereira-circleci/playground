@@ -3,11 +3,6 @@ package com.circleci
 import java.io.File
 import java.io.FileNotFoundException
 
-@Throws(RuntimeException::class)
-fun justFail() {
-    throw RuntimeException("Successfully failing! Yes, that is a thing.")
-}
-
 @Throws(FileNotFoundException::class)
 fun stepRerun() {
     val file = File(System.getProperty("user.home"),  "pass.txt")
@@ -34,7 +29,6 @@ fun main(args: Array<String>) {
     when (method) {
         "stepRerun" -> stepRerun()
         "workflowRerun" -> workflowRerun()
-        "justFail" -> justFail()
         else -> throw IllegalArgumentException("Method '${method}' not found.")
     }
 }
