@@ -20,6 +20,20 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:6.0.4")
     testImplementation("io.kotest:kotest-assertions-core:6.0.4")
     testImplementation("io.kotest:kotest-property:6.0.4")
+
+    // Dependencies below were added for Renovate testing.
+
+    // Contains a CVE
+    implementation("commons-io:commons-io:2.13.0")
+
+    // Has a minor update
+    implementation("org.apache.commons:commons-lang3:3.18.0")
+
+    // Has a major update with no CVE
+    implementation("org.apache.lucene:lucene-core:9.12.3")
+
+    // Has a major update with CVE
+    implementation("org.springframework:spring-web:5.3.37")
 }
 
 tasks.test {
