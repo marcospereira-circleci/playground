@@ -1,11 +1,21 @@
 {
   // Helps with autocompletion
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", ":dependencyDashboard"],
+
   "baseBranchPatterns": [
     "main",
     "/^version-4.[8-9]$/"
   ],
+
+  // Forces Renovate to scan for CVEs itself without requiring
+  // GH Dependabot alerts.
+  "osvVulnerabilityAlerts": true,
+
+  // lists the OSV-sourced CVEs in the Dependency Dashboard. `all` means "list all CVEs", including
+  // unresolved CVEs that have no fixes yet.
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+
   "packageRules": [
     // First disable major and minor updates
     {
@@ -24,13 +34,13 @@
       "matchBaseBranches": [
         "/^version-4.[8-9]$/"
       ],
-      "vulnerabilityAlerts": {
-        "enabled": true,
-        "labels": ["AUTOMERGE", "CVE"]
-      },
+      "matchJsonata": ["$exists(isVulnerabilityAlert) and isVulnerabilityAlert = true"],
       "automerge": true,
       "automergeSchedule": [
         "* 8-17 * * 1-5"
+      ],
+      "labels": [
+        "AUTOMERGE", "CVE", "security"
       ]
     },
     // Then enable patch/digest updates.
@@ -45,8 +55,16 @@
         "* 8-17 * * 1-5"
       ],
       "labels": [
-        "AUTOMERGE", "patch-deps"
+        "AUTOMERGE"
       ]
+    },
+    // Checking if regular groups still work as expected
+    {
+      groupName: 'kotest',
+      groupSlug: 'kotest',
+      matchPackageNames: [
+        'io.kotest{/,}**',
+      ],
     }
   ]
 }
