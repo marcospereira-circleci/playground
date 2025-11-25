@@ -8,6 +8,13 @@
     "/^version-4.[8-9]$/"
   ],
 
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": [
+      "CVE", "security"
+    ]
+  },
+
   // Forces Renovate to scan for CVEs itself without requiring
   // GH Dependabot alerts.
   "osvVulnerabilityAlerts": true,
