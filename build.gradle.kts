@@ -36,7 +36,7 @@ dependencies {
     implementation("org.apache.lucene:lucene-core:10.5.1")
 
     // Has a major update with CVE
-    implementation("org.springframework:spring-web:5.3.37")
+    implementation("org.springframework:spring-web:6.0.0")
 }
 
 tasks.test {
